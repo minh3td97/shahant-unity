@@ -21,9 +21,11 @@ namespace Shahant.DataBinder
         [CustomPropertyDrawer(typeof(BindingMember))]
         public class MemberDrawer : PropertyDrawer
         {
-            internal const string kNoFunctionString = "No Function";
-            
-            private List<string> classNames = new();
+            internal const string kTargetString = "Target";
+            internal const string kMemberString = "Member";
+            internal const string kNoMemberString = "No Member";
+
+            private List<string> classNames = new List<string>() { kNoMemberString, "item1", "item2" };
 
             public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
             {
@@ -35,22 +37,40 @@ namespace Shahant.DataBinder
                 memberRect.xMax = position.xMax;
                 var labelWidth = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = 50;
-                var targetProperty = property.FindPropertyRelative("Target");
-                EditorGUI.PropertyField(targetRect, targetProperty, new GUIContent("Target"));
+                
+                var targetProp = property.FindPropertyRelative(kTargetString);
+                var memberProp = property.FindPropertyRelative(kMemberString);
+                EditorGUI.PropertyField(targetRect, targetProp, new GUIContent(kTargetString));
 
-                EditorGUIUtility.labelWidth = 0;
-                EditorGUI.PropertyField(memberRect, property.FindPropertyRelative("Member"), GUIContent.none);
+                DrawMember(memberRect, targetProp, memberProp);
+
                 EditorGUIUtility.labelWidth = labelWidth;
                 if (EditorGUI.EndChangeCheck())
                     property.serializedObject.ApplyModifiedProperties();
                 EditorGUI.EndProperty();
             }
 
-            private void CreateListView(SerializedProperty property)
+            private void DrawMember(Rect rect, SerializedProperty targetProp, SerializedProperty memberProp)
             {
-
+                if (GUI.Button(rect, new GUIContent(GetMemberString(targetProp, memberProp)), EditorStyles.popup))
+                {
+                    //var popup = BuildPopupList.Invoke(null, new object[] { listenerTarget.objectReferenceValue, m_DummyEvent, pListener }) as GenericMenu;
+                    //popup.DropDown(functionRect);
+                }
             }
 
+            private string GetMemberString(SerializedProperty targetProp, SerializedProperty memberProp)
+            {
+                if (targetProp == null) return kNoMemberString;
+                if (targetProp.objectReferenceValue == null) return kNoMemberString; 
+                if (memberProp == null) return kNoMemberString;
+                if( memberProp.objectReferenceValue == null) return kNoMemberString;
+
+
+                string result = memberProp.objectReferenceValue.ToString();
+                // check missing member in targerProp
+                return $"{memberProp.objectReferenceValue.ToString()}";
+            }
             
         }
 #endif
