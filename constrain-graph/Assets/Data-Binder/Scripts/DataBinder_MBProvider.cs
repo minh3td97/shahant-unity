@@ -1,6 +1,9 @@
-﻿#if UNITY_EDITOR
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditorInternal;
+#endif
 
 namespace Shahant.DataBinder
 {
@@ -14,16 +17,9 @@ namespace Shahant.DataBinder
 
 #if UNITY_EDITOR
         [UnityEditor.CustomEditor(typeof(DataBinder_MBProvider))]
-        public class _Editor : DataBinder_Editor
-        {
-            public override void OnInspectorGUI()
-            {
-                base.OnInspectorGUI();
-            }
-        }
+        public class _Editor : DataBinder_Editor { }
 #endif
     }
 
     
 }
-#endif

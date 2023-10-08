@@ -16,8 +16,8 @@ namespace Shahant.DataBinder
         [CustomPropertyDrawer(typeof(BindingMember))]
         public class BindingMemberDrawer : PropertyDrawer
         {
-            internal const string kTargetString = "Target";
-            internal const string kMemberString = "Member";
+            internal const string kTargetString = "target";
+            internal const string kMemberString = "member";
             internal const string kNoMemberString = "No Member";
 
             public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -26,10 +26,12 @@ namespace Shahant.DataBinder
                 EditorGUI.BeginProperty(position, label, property);
                 EditorGUI.BeginChangeCheck();
                 float width = position.width - position.x;
-                var targetRect = new Rect(position.x, position.y, width * 0.5f - 3, position.height);
-                var memberRect = new Rect(targetRect.xMax + 3, position.y, position.width - targetRect.width, position.height);
-                memberRect.xMax = position.xMax;
                 var labelWidth = EditorGUIUtility.labelWidth;
+
+                var targetRect = new Rect(position.x, position.y, labelWidth - 2, position.height);
+                var memberRect = new Rect(targetRect.xMax + 2, position.y, position.width - targetRect.width, position.height);
+                memberRect.xMax = position.xMax;
+                
                 EditorGUIUtility.labelWidth = 50;
                 
                 var targetProp = property.FindPropertyRelative(kTargetString);
@@ -55,12 +57,13 @@ namespace Shahant.DataBinder
             {
                 using (new EditorGUI.DisabledScope(targetProp.objectReferenceValue == null))
                 {
-
+                    
                     if (GUI.Button(rect, new GUIContent(GetButtonLabel(targetProp, memberProp)), EditorStyles.popup))
                     {
                         GenericMenu menu = GetMethodGenericMenu(targetProp, memberProp);
                         menu.DropDown(rect);
                     }
+                    
                 }
             }
 
@@ -108,6 +111,10 @@ namespace Shahant.DataBinder
                         var component = components[i];
                         if (component == null) continue;
                         var type = component.GetType();
+
+                        //var fields = ReflectionUtils.GetFields(type, selectorAttribute.parameterType, true, true);
+                        //var properties = ReflectionUtils.GetInstanceProperties(type, selectorAttribute.parameterType, true, true, true);
+                        //var methods = ReflectionUtils.GetInstanceMethodsWithParameter(type, selectorAttribute.parameterType, false);
 
                         var properties = component.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                         foreach(var _ in properties)
