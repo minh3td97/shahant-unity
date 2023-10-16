@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Shahant.DataBinder
 {
-    public class DataBinder : MonoBehaviour
+    public abstract class DataBinder : MonoBehaviour
     {
         [SerializeField] private int flag = 0x01;
 

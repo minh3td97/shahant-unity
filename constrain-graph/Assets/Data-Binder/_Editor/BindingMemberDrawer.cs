@@ -36,7 +36,7 @@ namespace Shahant.DataBinder
                 
                 var targetProp = property.FindPropertyRelative(kTargetString);
                 var memberProp = property.FindPropertyRelative(kMemberString);
-                EditorGUI.PropertyField(targetRect, targetProp, new GUIContent(kTargetString));
+                EditorGUI.PropertyField(targetRect, targetProp, new GUIContent("Target"));
 
                 DrawMember(memberRect, targetProp, memberProp);
 
