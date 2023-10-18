@@ -19,9 +19,9 @@ namespace Shahant.PathFinding
 
             var directions = System.Enum.GetValues(typeof(Direction));
 
-            for (int x = 0; x < width; ++x)
+            for(int y = 0; y < height; ++y)
             {
-                for(int y = 0; y < height; ++y)
+                for (int x = 0; x < width; ++x)
                 {
                     Node node = new Node(x, y);
                     Nodes.Add(node);
@@ -42,6 +42,11 @@ namespace Shahant.PathFinding
                     
                 }
             }
+        }
+        
+        public Node GetNode(Vector2Int coord)
+        {
+            return Nodes[coord.y * Width + coord.x];
         }
     }
 

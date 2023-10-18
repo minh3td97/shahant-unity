@@ -26,8 +26,13 @@ namespace Shahant.PathFinding
 
         public void AddNeighbor(Node node) => Neighbors.Add(node);
         public void AddWall(Direction wall) => Walls.Add(wall);
+        public void RemoveWall(Direction wall) 
+        { 
+            if (Walls.Contains(wall)) 
+                Walls.Remove(wall); 
+        }
         
-        public bool Approachable(Direction dir) => !Walls.Contains(dir);
+        public bool Approachable(Direction dir) => !Blocked && !Walls.Contains(dir);
         public bool Approachable(Node neighbor) => Approachable((neighbor.Coord - Coord).ToDirection());
     }
 }
