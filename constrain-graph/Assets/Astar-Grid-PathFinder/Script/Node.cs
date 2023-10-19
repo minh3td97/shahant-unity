@@ -24,7 +24,12 @@ namespace Shahant.PathFinding
             this.Coord = Coord;
         }
 
-        public void AddNeighbor(Node node) => Neighbors.Add(node);
+        public void AddNeighbor(Node node)
+        {
+            if (node == null) return;
+            Neighbors.Add(node);
+        }
+
         public void AddWall(Direction wall) => Walls.Add(wall);
         public void RemoveWall(Direction wall) 
         { 

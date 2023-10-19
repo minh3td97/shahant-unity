@@ -26,27 +26,24 @@ namespace Shahant.PathFinding
                     Node node = new Node(x, y);
                     Nodes.Add(node);
                     nodeDict.Add(node.Coord, node);
-
-                    // Caculate Neigbors
-                    foreach(Direction dir in directions)
-                    {
-                        if (dir == Direction.None) continue;
-                        var coord = node.Coord + dir.ToVector();
-                        
-                        if(nodeDict.TryGetValue(coord, out var nNode))
-                        {
-                            nNode.AddNeighbor(node);
-                            node.AddNeighbor(nNode);
-                        }
-                    }
-                    
                 }
             }
+
+            for(int i = 0; i < Nodes.Count; ++i)
+            {
+                Nodes[i].AddNeighbor(GetNode(Nodes[i].Coord + Direction.Up.ToVector()));
+                Nodes[i].AddNeighbor(GetNode(Nodes[i].Coord + Direction.Down.ToVector()));
+                Nodes[i].AddNeighbor(GetNode(Nodes[i].Coord + Direction.Right.ToVector()));
+                Nodes[i].AddNeighbor(GetNode(Nodes[i].Coord + Direction.Left.ToVector()));
+            }
+
         }
         
         public Node GetNode(Vector2Int coord)
         {
-            return Nodes[coord.y * Width + coord.x];
+            if(coord.x >= 0 && coord.y >= 0 && coord.x < Width && coord.y < Height)
+                return Nodes[coord.y * Width + coord.x];
+            return null;
         }
     }
 

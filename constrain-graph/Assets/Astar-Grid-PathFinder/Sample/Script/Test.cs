@@ -93,7 +93,12 @@ namespace Shahant.PathFinding
 
         public void GeneratePath()
         {
-            foreach (var node in _pathNodeView) node.SetColor( _defaultColor);
+            foreach (var node in _pathNodeView) 
+            {
+                if (node == _startView || node == _endView || node.Data.Blocked) continue;
+                node.SetColor(_defaultColor); 
+            }
+            _pathNodeView.Clear();
             if(_startView && _endView)
             {
 
