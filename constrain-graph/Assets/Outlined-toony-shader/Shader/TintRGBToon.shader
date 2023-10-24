@@ -1,4 +1,4 @@
-Shader "Custom/TintColorToon"
+Shader "Shahant/TintRGBToon"
 {
 	Properties
 	{
@@ -17,8 +17,8 @@ Shader "Custom/TintColorToon"
 			{
 				"RenderType" = "Opaque"
 				"Queue" = "Geometry"
+				"LightMode" = "ForwardBase"
 			}
-
 
 			Pass
 			{
@@ -49,6 +49,7 @@ Shader "Custom/TintColorToon"
 					float2 uv : TEXCOORD0;
 					float3 viewDir : TEXCOORD1;
 					SHADOW_COORDS(2)
+					fixed4 diff : COLOR4;
 				};
 
 				sampler2D _MainTex;
@@ -64,24 +65,35 @@ Shader "Custom/TintColorToon"
 				{
 					v2f o;
 
+					float3 worldNormal = UnityObjectToWorldNormal(v.normal);
+
 					o.pos = UnityObjectToClipPos(v.vertex);
-					o.worldNormal = UnityObjectToWorldNormal(v.normal);
+					o.worldNormal = worldNormal;
 					o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+
+					half nl = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
+					o.diff = nl * _LightColor0;
+					o.diff.rgb += ShadeSH9(half4(worldNormal, 1));
+
 					TRANSFER_SHADOW(o)
+
 					return o;
 				}
 
-
-
 				float4 frag(v2f i) : SV_Target
 				{
-					float3 normal = normalize(i.worldNormal);
-					float shadow = SHADOW_ATTENUATION(i) * dot(_WorldSpaceLightPos0, normal);
-					float light = step(0.1, shadow);
-					float omLight = 1 - light;
 					float4 mainTexture = tex2D(_MainTex, i.uv);
 					float4 tint = mainTexture.r * _TintR + mainTexture.b * _TintB + mainTexture.g * _TintG;
-					return (omLight * _ShadowColor + light) * _Color * tint * _Brightness;
+
+					half3 nonLightColor = half3(1, 0, 0);
+					float lightFactorByColor = length(tint.rgb - nonLightColor) / 1.73205;
+
+					tint = lerp(tint, tint * i.diff, lightFactorByColor);
+
+					float shadow = SHADOW_ATTENUATION(i);
+					tint.rgb = lerp(tint.rgb, _ShadowColor, 1 - shadow);
+
+					return tint;
 				}
 				ENDCG
 			}

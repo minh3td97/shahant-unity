@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TintColorToon
+  m_Name: RGBToon
   m_Shader: {fileID: 4800000, guid: f11abf01bed1eaf4a8ba2fc19fd108cb, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
