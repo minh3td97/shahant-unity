@@ -86,7 +86,7 @@ Shader "Shahant/TintColorToon"
 
 					// Shadow
 					float shadow = SHADOW_ATTENUATION(i);
-					tint.rgb = lerp(tint.rgb, _ShadowColor, 1 - shadow);
+					tint.rgb = lerp(tint.rgb, _ShadowColor, (1 - shadow) * _ShadowColor.a);
 
 					return tint;
 				}

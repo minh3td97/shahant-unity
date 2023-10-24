@@ -132,13 +132,17 @@
 				float3 normal : NORMAL;
 			};
 
+			
+
 			struct v2f
 			{
 				float4 pos : SV_POSITION;
 				float3 worldNormal : NORMAL;
 				float2 uv : TEXCOORD0;
-				float3 viewDir : TEXCOORD1;	
+				float3 viewDir : TEXCOORD1;
+				fixed4 diff : COLOR4;
 				SHADOW_COORDS(2)
+					
 			};
 
 			sampler2D _MainTex;
@@ -149,31 +153,42 @@
 			float4 _TintR;
 			float4 _TintB;
 			float4 _TintG;
-			
-			v2f vert (appdata v)
+
+			v2f vert(appdata v)
 			{
 				v2f o;
-				
+
+				float3 worldNormal = UnityObjectToWorldNormal(v.normal);
+
 				o.pos = UnityObjectToClipPos(v.vertex);
-				o.worldNormal = UnityObjectToWorldNormal(v.normal);	
+				o.worldNormal = worldNormal;
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+				o.viewDir = WorldSpaceViewDir(v.vertex);
+
+				half nl = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
+				o.diff = nl * _LightColor0;
+				o.diff.rgb += ShadeSH9(half4(worldNormal, 1));
+
 				TRANSFER_SHADOW(o)
-				return o;
+
+					return o;
 			}
-			
-			
-	
-			float4 frag (v2f i) : SV_Target
+
+			float4 frag(v2f i) : SV_Target
 			{
-				float3 normal = normalize(i.worldNormal);
-				float shadow = SHADOW_ATTENUATION(i) * dot(_WorldSpaceLightPos0, normal);
-				float light = step(0.1, shadow);	
-				float omLight =  1 - light ;
 				float4 mainTexture = tex2D(_MainTex, i.uv);
 				float4 tint = mainTexture.r * _TintR + mainTexture.b * _TintB + mainTexture.g * _TintG;
-				return ( omLight * _ShadowColor + light) * _Color * tint * _Brightness;
+
+				float3 normal = normalize(i.worldNormal);
+				float shadow = SHADOW_ATTENUATION(i);
+				float shadowDotNormal = shadow * dot(_WorldSpaceLightPos0, normal);
+				shadow = step(0.1, shadowDotNormal);
+
+				tint.rgb = lerp(tint.rgb, _ShadowColor, (1 - shadow) * _ShadowColor.a);
+
+				return tint;
 			}
-			ENDCG
+				ENDCG
 		}
 
 		// Shadow casting support.

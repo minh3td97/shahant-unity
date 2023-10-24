@@ -70,6 +70,7 @@ Shader "Shahant/TintRGBToon"
 					o.pos = UnityObjectToClipPos(v.vertex);
 					o.worldNormal = worldNormal;
 					o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+					o.viewDir = WorldSpaceViewDir(v.vertex);
 
 					half nl = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
 					o.diff = nl * _LightColor0;
@@ -85,13 +86,15 @@ Shader "Shahant/TintRGBToon"
 					float4 mainTexture = tex2D(_MainTex, i.uv);
 					float4 tint = mainTexture.r * _TintR + mainTexture.b * _TintB + mainTexture.g * _TintG;
 
-					half3 nonLightColor = half3(1, 0, 0);
-					float lightFactorByColor = length(tint.rgb - nonLightColor) / 1.73205;
-
 					tint = lerp(tint, tint * i.diff, lightFactorByColor);
 
-					float shadow = SHADOW_ATTENUATION(i);
-					tint.rgb = lerp(tint.rgb, _ShadowColor, 1 - shadow);
+					float3 normal = normalize(i.worldNormal);
+					float shadow = SHADOW_ATTENUATION(i) * dot(_WorldSpaceLightPos0, normal);
+					shadow = step(0.1, shadow);
+					float shadowDotNormal = shadow * dot(_WorldSpaceLightPos0, normal);
+					shadow = step(0.1, shadowDotNormal);
+
+					tint.rgb = lerp(tint.rgb, _ShadowColor, (1 - shadow) * _ShadowColor.a);
 
 					return tint;
 				}
