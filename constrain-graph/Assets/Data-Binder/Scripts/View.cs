@@ -19,15 +19,32 @@ namespace Shahant
         public void TriggerChangedAll() => TriggerChanged(~0);
     }
 
-    public class View<T> : View
+    public class View<T> : View, IDataView<T>
     {
         public T Data { get; private set; }
 
         public void Setup(T data)
         {
             Data = data;
+            OnSetup();
+        }
+        public virtual void OnSetup() { }
+        
+        public void Teardown()
+        {
+            OnTeardown();
         }
 
+        public virtual void OnTeardown() { }
+    }
+
+    public interface IDataView<T>
+    {
+        public T Data { get; }
+        public void Setup(T data);
+        public void OnSetup();
+        public void Teardown();
+        public void OnTeardown();
     }
 }
 

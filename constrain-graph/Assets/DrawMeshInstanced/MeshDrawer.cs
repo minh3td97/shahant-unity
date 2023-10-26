@@ -6,27 +6,46 @@ namespace Shahant.MeshDraw
 {
     public class MeshDrawer<T> : MeshDrawer
     {
-        public T Data { get; private set; }
+        public T DrawerData { get; private set; }
         public virtual void Setup(T data)
         {
-            this.Data = data;
+            base.Setup(data);
+            this.DrawerData = data;
         }
     }
 
-    public class Drawer : MonoBehaviour
+    public class Drawer : MonoBehaviour, IDataView<object>
     {
-        protected virtual void Draw()
-        {
+        public object Data { get; private set; }
 
+        public virtual void Setup(object data)
+        {
+            Data = data;
+
+            if(Data != null)
+                OnSetup();
         }
+
+        public virtual void OnSetup() { }
+
+        public virtual void OnTeardown() { }
+
+        public virtual void Teardown()
+        {
+            if(Data != null)
+                OnTeardown();
+        }
+
+        protected virtual void Draw()  {  }
     }
 
     public class Drawer<T> : Drawer
     {
-        public T Data { get; private set; }
+        public T DrawerData { get; private set; }
         public virtual void Setup(T data)
         {
-            this.Data = data;
+            base.Setup(data);
+            this.DrawerData = data;
         }
     }
 
@@ -41,7 +60,7 @@ namespace Shahant.MeshDraw
 
         private Matrix4x4[] _matrices;
 
-        protected void Setup(List<Vector3> positions, List<Quaternion> rotations, List<Vector3> scales)
+        public virtual void Setup(List<Vector3> positions, List<Quaternion> rotations, List<Vector3> scales)
         {
             IsInitialized = false;
             if (positions.Count != rotations.Count || positions.Count != scales.Count) return;
