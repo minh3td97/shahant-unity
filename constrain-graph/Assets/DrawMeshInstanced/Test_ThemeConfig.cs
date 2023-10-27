@@ -15,7 +15,13 @@ namespace GameLineup.Theme
 
         private List<Drawer> Drawers { get; set; } = new();
 
+        public void OnEnable()
+        {
+            SpawnTheme();
+        }
 
+
+        [ContextMenu("Spawn Theme")]
         public void SpawnTheme()
         {
             var grid = GenerateGrid();

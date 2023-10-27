@@ -4,52 +4,7 @@ using UnityEngine;
 
 namespace Shahant.MeshDraw
 {
-    public class MeshDrawer<T> : MeshDrawer
-    {
-        public T DrawerData { get; private set; }
-        public virtual void Setup(T data)
-        {
-            base.Setup(data);
-            this.DrawerData = data;
-        }
-    }
-
-    public class Drawer : MonoBehaviour, IDataView<object>
-    {
-        public object Data { get; private set; }
-
-        public virtual void Setup(object data)
-        {
-            Data = data;
-
-            if(Data != null)
-                OnSetup();
-        }
-
-        public virtual void OnSetup() { }
-
-        public virtual void OnTeardown() { }
-
-        public virtual void Teardown()
-        {
-            if(Data != null)
-                OnTeardown();
-        }
-
-        protected virtual void Draw()  {  }
-    }
-
-    public class Drawer<T> : Drawer
-    {
-        public T DrawerData { get; private set; }
-        public virtual void Setup(T data)
-        {
-            base.Setup(data);
-            this.DrawerData = data;
-        }
-    }
-
-    public class MeshDrawer : Drawer
+    public class MeshDrawer<T> : Drawer<T>
     {
         [SerializeField] Mesh _mesh;
         [SerializeField] Material _material;
@@ -91,5 +46,6 @@ namespace Shahant.MeshDraw
             }
         }
     }
+    
 }
 

@@ -44,5 +44,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d6b3daeda47ce4290083a2be29ed55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _drawers:
-  - {fileID: -5804771909347721929, guid: c94c5ec1af93c6546aa6e84cf5720c3f, type: 3}
+  _cornerMesh:
+    mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    size: {x: 1, y: 1, z: 1}
+  _meshes:
+  - mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    size: {x: 1, y: 1, z: 1}
+  - mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    size: {x: 1, y: 1, z: 2}
+  - mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    size: {x: 1, y: 1, z: 2}
+  - mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    size: {x: 1, y: 1, z: 0.5}
+  - mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    size: {x: 1, y: 1, z: 2}
+  - mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    size: {x: 1, y: 1, z: 1}
+  - mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    size: {x: 1, y: 1, z: 1}
+  - mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    size: {x: 1, y: 1, z: 2}
+  _padding:
+    left: 1.5
+    right: 1.5
+    top: 1.5
+    bottom: 1.5
+  _material: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
